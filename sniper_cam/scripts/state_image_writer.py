@@ -7,9 +7,6 @@
 ##  -write image to all_targets folder
 ##  -write state data to all_state_data.txt
 
-## Jesse Wynn AUVSI '17
-## Note: As of 05/22/17 this node only works as designed with Ubuntu 14.04 and OpenCV version 2.4
-
 import rospy
 from sniper_cam.msg import stateImage
 from std_msgs.msg import Float64
