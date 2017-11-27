@@ -6,6 +6,8 @@
  <arg name="R_earth" value="6370651" />
 
  <node name="state_image_writer" pkg="sniper_cam" type="state_image_writer.py">
+	<param name="image_directory" value="~/Desktop/vision_files/all_images/" />
+	<param name="state_directory" value="~/Desktop/vision_files/all_state_files/" />
  </node>
 
  <node name="sort_and_locate_interface" pkg="sniper_cam" type="sniper_geo_locator.py" output="screen">

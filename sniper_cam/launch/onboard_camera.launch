@@ -17,5 +17,10 @@
 	<param name="frame_rate_in" value="$(arg frame_rate)" />
  </node>
 
+ <node name="onboard_image_storage" pkg="sniper_cam" type="state_image_writer.py">
+  <param name="image_directory" value="/dev/sda1/vision_files/all_images/" />
+	<param name="state_directory" value="/dev/sda1/vision_files/all_state_files/" />
+ </node>
+
 
 </launch>

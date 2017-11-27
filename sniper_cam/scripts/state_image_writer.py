@@ -46,9 +46,15 @@ class StateImageWriter(object):
         self.image_save = np.zeros(shape, np.uint8)
 
         # set vision_files directories
-        self.image_directory = os.path.expanduser('~') + "/Desktop/vision_files/all_images/"
+        self.image_directory = os.path.expanduser(rospy.get_param('~image_directory'))
+        self.txt_directory = os.path.expanduser(rospy.get_param('~state_directory'))
 
-        self.txt_directory = os.path.expanduser('~') + "/Desktop/vision_files/all_state_files/"
+        # create directories if they don't exist
+        if not os.path.exists(self.image_directory):
+            os.makedirs(self.image_directory)
+
+        if not os.path.exists(self.txt_directory):
+            os.makedirs(self.txt_directory)
 
         # create a CvBridge object
         self.bridge = CvBridge()
