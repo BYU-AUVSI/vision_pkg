@@ -43,5 +43,5 @@ All of this takes place on the ground. If this is done on a different computer (
 There should be 4 computers running on the ground during a flight:
 1. The ground station running the [ground station package](https://github.com/BYU-AUVSI/GroundStation). 
 2. The [image detection](#image-detection).
-3. The [image detect and classification](#image-classification-and-localization).
+3. The [image classification and localization](#image-classification-and-localization).
 4. The [interopt client](https://github.com/BYU-AUVSI/interop_pkg).
