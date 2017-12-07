@@ -2,6 +2,7 @@
 
  <!-- set the onboard camera frame rate -->
  <arg name="frame_rate" value="15" />
+ <arg name="use_onboard_storage" value="false" />
 
  <node name="pointgrey_camera" pkg="pointgrey_camera_driver" type="camera_node">
 	<param name="frame_rate" value="$(arg frame_rate)" />
@@ -17,7 +18,7 @@
 	<param name="frame_rate_in" value="$(arg frame_rate)" />
  </node>
 
- <node name="onboard_image_storage" pkg="sniper_cam" type="state_image_writer.py">
+ <node if="$(arg use_onboard_storage)" name="onboard_image_storage" pkg="sniper_cam" type="state_image_writer.py">
   <param name="image_directory" value="/dev/sda1/vision_files/all_images/" />
 	<param name="state_directory" value="/dev/sda1/vision_files/all_state_files/" />
  </node>
