@@ -4,12 +4,19 @@
  <arg name="frame_rate" value="15" />
  <arg name="use_onboard_storage" value="false" />
 
+<arg name="calibrated" value="true" />
+<arg name="camera_serial" default="0" />
+
+
+
  <node name="pointgrey_camera" pkg="pointgrey_camera_driver" type="camera_node">
 	<param name="frame_rate" value="$(arg frame_rate)" />
   <param name="auto_shutter" value="true" />
   <param name="shutter_speed" value="0.01" />
   <param name="format7_color_coding" value="raw8" />
   <param name="auto_white_balance" value="true" />
+  <param name="camera_info_url" if="$(arg calibrated)"
+             value="file://$(find vision_pkg)/chameleon3_LLNL.yaml" />
   <!-- param name="white_balance_blue" value="800" -->
   <!-- param name="white_balance_red" value="550" -->
  </node>
