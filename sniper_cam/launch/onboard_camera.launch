@@ -2,7 +2,7 @@
 
  <!-- set the onboard camera frame rate -->
  <arg name="frame_rate" value="15" />
- <arg name="use_onboard_storage" value="false" />
+ <arg name="use_onboard_storage" value="true" />
 
 <!-- <arg name="calibrated" value="true" />
 <arg name="camera_serial" default="0" /> -->
