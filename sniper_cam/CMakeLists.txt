@@ -4,7 +4,7 @@ project(sniper_cam)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-find_package(OpenCV REQUIRED)
+find_package(OpenCV 3 REQUIRED)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
@@ -131,10 +131,13 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(include)
-include_directories(include ${catkin_INCLUDE_DIRS})
+include_directories(
+   ${catkin_INCLUDE_DIRS}
+   $(OpenCV_INCLUDE_DIRS)
+   )
 
 add_executable(sniper_cam src/sniper_cam_publisher.cpp include/sniper_cam_publisher.h)
-target_link_libraries(sniper_cam ${catkin_LIBRARIES})
+target_link_libraries(sniper_cam ${catkin_LIBRARIES} ${OpenCV_LIBRARIES})
 add_dependencies(sniper_cam sniper_cam_generate_messages_cpp)
 
 
