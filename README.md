@@ -6,7 +6,7 @@ The camera on the plane takes pictures at the rate of 15 Hz. The camera we are u
 
 This whole system begins by running `roslaunch sniper_cam onboard_camera.launch` in the correct workspace on the Odroid. If you don't want the imaging system to terminate if your ssh session is interrupted, use `nohup roslaunch sniper_cam onboard_camera.launch &`. This launches the processes in the background and catches the hangup signal. For the script to work, the following environment variables need to be set on the Odroid:
 * `ROS_IP=Odroid's IP`
-* `ROS_MASTER_URI=Odriod's IP:1311`
+* `ROS_MASTER_URI=Odriod's (http://)IP:11311`
 
 The launchfile will also launch a node to store images taken locally, on a usb drive. The drive should be mounted with `sudo mount /dev/sda1 /mnt -o umask=000` before the flight.
 Settings to adjust the white balance and color profiles are also in this launchfile. This is the extent of the image processing running on the plane.
@@ -15,7 +15,7 @@ Settings to adjust the white balance and color profiles are also in this launchf
 To run the ground image detection software:
 1. Ensure that your local environment variables are set to the following:
 * `ROS_IP=Your Computer's IP`
-* `ROS_MASTER_URI=Odroid's IP:1311`
+* `ROS_MASTER_URI=Odroid's (http://)IP:11311`
 
 An easy way to do this is to run `source .rosrc`, where `.rosrc` is the script in the root folder of this project. Make sure to edit this script first to use the proper IP addresses or make your IP address static in the router DHCP setup.
 
