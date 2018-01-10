@@ -39,6 +39,8 @@ Two major problems were experienced at last year's competition relating to imagi
 * The detection gui isn't the best way to monitor image quality as it may lag far behind the current incoming stream. We need some way to view the livestream coming in. [Image pipeline](https://github.com/ros-perception/image_pipeline) lets you subscribe to compressed or uncompressed image topics and view them raw. Run it with `rosrun image_view image_view image:=<image topic> [image transport type]` after cloning and building it with the rest of the packages.
 * The pointgrey_camera_driver package publishes both compressed and uncompressed topics, so make sure you subscribe to the right one.
 * [Dynamic reconfiguration](http://wiki.ros.org/dynamic_reconfigure) is a common way of dynamically changing parameters in ROS. pointgrey_camera_driver provides several nodes that support it. Run `rosrun rqt_reconfigure rqt_reconfigure` to launch the gui. From here you can change camera parameters and also compression parameters, to dynamically change streaming characteristics.
+* Additional calibration is needed to remove distortion at the edges of the image, where the lens distorts straight lines to make them appear curved (rectification). Use the tutorial [here](http://wiki.ros.org/camera_calibration/Tutorials/MonocularCalibration) to generate a YAML with configuration parameters (my command was `rosrun camera_calibration cameracalibrator.py --ze 8x6 --square 0.108 image:=/image_raw camera:=/`). 
+
 
 
 ## Getting it all together
