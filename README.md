@@ -8,7 +8,7 @@ This whole system begins by running `roslaunch sniper_cam onboard_camera.launch`
 * `ROS_IP=Odroid's IP`
 * `ROS_MASTER_URI=Odriod's (http://)IP:11311`
 
-The launchfile will also launch a node to store images taken locally, on a uSD card. The drive should be mounted with `sudo mount /dev/sda1 /mnt -o umask=000` before the flight.
+The launchfile will also launch a node to store images taken locally, on a uSD card. The drive should be mounted with `sudo mount /dev/mmcblk1p1 /mnt -o umask=000` before the flight.
 Settings to adjust the white balance and color profiles are also in this launchfile. This is the extent of the image processing running on the plane.
 
 ### Ground side
