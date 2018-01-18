@@ -8,8 +8,8 @@
 ##  -write state data to all_state_data.txt
 
 import rospy
-from sniper_cam.msg import stateImage
-from std_msgs.msg import Float64
+from sensor_msgs.msg import Image
+from rosplane_msgs.msg import State
 from cv_bridge import CvBridge, CvBridgeError
 import cv2
 import math
@@ -18,13 +18,18 @@ import os
 import time
 from time import strftime, localtime
 from datetime import datetime
+import message_filters
 
 
 class StateImageWriter(object):
 
     def __init__(self):
         # setup state_image subscriber
-        self.state_image_subscriber = rospy.Subscriber('state_image', stateImage, self.state_image_callback, queue_size=1)
+        self.image_sub = message_filters.Subscriber('image_raw/decompressed', Image)
+        self.state_sub = message_filters.Subscriber('/state', State)
+        
+        self.ts = message_filters.ApproximateTimeSynchronizer([self.image_sub, self.state_sub], 10, 0.1)
+        self.ts.registerCallback(self.state_image_callback)
 
         # initialize state variables
         self.pn = 0.0
@@ -62,22 +67,22 @@ class StateImageWriter(object):
         # initialize counter
         self.counter = 0
 
-    def state_image_callback(self, msg):
+    def state_image_callback(self, img_msg, state_msg):
         # pull off the state info from the message
-        self.pn = msg.pn
-        self.pe = msg.pe
-        self.pd = msg.pd
+        self.pn = state_msg.position[0]
+        self.pe = state_msg.position[1]
+        self.pd = state_msg.position[2]
 
-        self.phi = msg.phi
-        self.theta = msg.theta
-        self.chi = msg.chi
+        self.phi = state_msg.phi
+        self.theta = state_msg.theta
+        self.chi = state_msg.chi
 
-        self.alpha_az = msg.azimuth
-        self.alpha_el = msg.elevation
+        self.alpha_az = math.radians(0)
+        self.alpha_el = math.radians(-90)
 
         # pull off the image portion of the message
         # image_display = self.bridge.imgmsg_to_cv2(msg.image, "bgr8")
-        self.image_save = self.bridge.imgmsg_to_cv2(msg.image, "bgr8")
+        self.image_save = self.bridge.imgmsg_to_cv2(img_msg, "bgr8")
 
         # increment the counter
         self.counter += 1

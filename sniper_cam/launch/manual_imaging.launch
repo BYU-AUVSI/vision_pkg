@@ -5,6 +5,9 @@
  <!-- Webster Field MD: 6370027 -->
  <arg name="R_earth" value="6370651" />
 
+ <!-- Republish compressed images -->
+<node name="republish" type="republish" pkg="image_transport" args="compressed in:=/image_raw raw out:=/image_raw/decompressed" />
+
  <node name="state_image_writer" pkg="sniper_cam" type="state_image_writer.py">
 	<param name="image_directory" value="~/Desktop/vision_files/all_images/" />
 	<param name="state_directory" value="~/Desktop/vision_files/all_state_files/" />
