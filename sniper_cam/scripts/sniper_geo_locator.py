@@ -123,10 +123,13 @@ class SniperGeoLocator(object):
         # check to see if GPS Init data received
         if self.got_gps_init == False:
             print "Warning! GPS_Init not received"
-        else:
-            pass
 
         # read in the image
+        if len(self.file_list) == 0:
+            print "Warning! No images to display yet"
+            self.update_file_list()
+            return # Don't crash when there are not images yet
+
         filename = self.file_list[self.image_number]
         stuff = filename.strip().split('/')
         image_name = stuff[-1]  #get the last part of the file path
@@ -346,11 +349,6 @@ def main():
     while not rospy.is_shutdown():
         locator.display_image()
 
-    #spin
-    try:
-        rospy.spin()
-    except KeyBoardInterrupt:
-        print("Shutting down")
     #OpenCV cleanup
     cv2.destroyAllWindows()
 
