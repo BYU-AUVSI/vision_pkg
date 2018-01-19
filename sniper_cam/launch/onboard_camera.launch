@@ -5,18 +5,18 @@
  <arg name="use_onboard_storage" value="true" />
 <arg name="calibrated" value="true" />
 
- <node name="pointgrey_camera" output="screen"  pkg="pointgrey_camera_driver" type="camera_node">
+<!-- <node name="pointgrey_camera" output="screen"  pkg="pointgrey_camera_driver" type="camera_node">
 	<param name="frame_rate" value="$(arg frame_rate)" />
   <param name="auto_shutter" value="true" />
   <param name="shutter_speed" value="0.01" />
   <param name="format7_color_coding" value="raw8" />
   <param name="auto_white_balance" value="true" />
   <param name="camera_info_url" if="$(arg calibrated)"
-             value="file:///home/thor/ost.yaml" />
+             value="file:///home/thor/ost.yaml" /><-->
   <!-- param name="white_balance_blue" value="800" -->
   <!-- param name="white_balance_red" value="550" -->
- </node>
-
+ <!--</node>-->
+<node name="other_camera" output="screen" pkg="cv_camera" type="cv_camera_node"></node>
  <node name="state_image_stamper" pkg="sniper_cam" type="image_stamper.py">
 	<param name="frame_rate_in" value="$(arg frame_rate)" />
  </node>
