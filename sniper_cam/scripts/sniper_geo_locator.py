@@ -39,7 +39,7 @@ class SniperGeoLocator(object):
 
         # setup mouse click callback
         self.window = 'onboard image'
-        cv2.namedWindow(self.window)
+        cv2.namedWindow(self.window, flags=cv2.WINDOW_NORMAL)
         cv2.setMouseCallback(self.window, self.click_and_locate)
 
         # initialize home location (from gps_init)
@@ -149,12 +149,12 @@ class SniperGeoLocator(object):
         self.update_file_list()
 
         # draw the interface on the display image
-        cv2.rectangle(image_display,(width-240,0),(width,35),(0,0,0),-1)
-        cv2.putText(image_display, "Status: ",(width-210,15),cv2.FONT_HERSHEY_PLAIN,1.25,(0,255,0))
-        cv2.putText(image_display, self.status,(width-130,15),cv2.FONT_HERSHEY_PLAIN,1.25,(self.color))
-        cv2.putText(image_display,"ID: " + self.image_id,(width-230,30),cv2.FONT_HERSHEY_PLAIN,1,(197,155,19))
-        cv2.rectangle(image_display,(0,0),(230,15),(0,0,0),-1)
-        cv2.putText(image_display, "Image number: " + str(self.image_number) + "/" + str(len(self.file_list)-1),(5,12),cv2.FONT_HERSHEY_PLAIN,1,(0,255,0))
+        cv2.rectangle(image_display,(width-680,0),(width,100),(0,0,0),-1)
+        cv2.putText(image_display, "Status: ",(width-500,33),cv2.FONT_HERSHEY_PLAIN,3,(0,255,0), thickness=2)
+        cv2.putText(image_display, self.status,(width-300,33),cv2.FONT_HERSHEY_PLAIN,3,(self.color), thickness=2)
+        cv2.putText(image_display,"ID: " + self.image_id,(width-675,80),cv2.FONT_HERSHEY_PLAIN,3,(197,155,19), thickness=2)
+        cv2.rectangle(image_display,(0,0),(550,45),(0,0,0),-1)
+        cv2.putText(image_display, "Image number: " + str(self.image_number) + "/" + str(len(self.file_list)-1),(5,33),cv2.FONT_HERSHEY_PLAIN,3,(0,255,0), thickness=2)
         cv2.line(image_display,((width/2)-10,height/2),((width/2)+10,height/2),self.color)
         cv2.line(image_display,(width/2,(height/2)+10),(width/2,(height/2)-10),self.color)
 
