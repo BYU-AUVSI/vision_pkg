@@ -175,7 +175,7 @@ class SniperGeoLocator(object):
 
     def click_and_locate(self, event, x, y, flags, param):
         # if user clicks on target in the image frame
-        if event == cv2.EVENT_LBUTTONDOWN and self.target_number > 0  and self.image_number > 0:
+        if event == cv2.EVENT_LBUTTONDOWN and self.target_number > 0:
             #parse text file containing associated state data
             self.parse_state_file()
             self.chapter_13_geolocation(x,y)
