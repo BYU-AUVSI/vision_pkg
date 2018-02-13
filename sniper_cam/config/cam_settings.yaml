@@ -42,11 +42,19 @@ basler_params:
   -
     name: ExposureAuto
     type: enum
-    value: 'Off'
-  -
-    name: ExposureTime
-    type: float
-    value: 7302.0
+    value: 'Continuous'
+
+  # Inside
+  # -
+  #   name: ExposureTime
+  #   type: float
+  #   value: 7302.0
+
+  # Outside
+  # -
+  #   name: ExposureTime
+  #   type: float
+  #   value: 2000.0
   -
     name: AcquisitionFrameRate
     type: float
