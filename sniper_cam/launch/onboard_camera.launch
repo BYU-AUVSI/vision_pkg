@@ -17,9 +17,9 @@
   <!-- param name="white_balance_red" value="550" -->
  <!--</node>-->
 
-<node name="basler_camera" output="screen" pkg="pylon_camera" type="pylon_camera_node">
-  <rosparam command="load" file="$(find sniper_cam)/config/default.yaml" />
-</node>
+<node name="other_camera" pkg="basler_camera" type="basler_camera_node" output="screen">
+    <rosparam command="load" file="$(find sniper_cam)/config/default.yaml"/>
+  </node>
 
 <node name="state_image_stamper" pkg="sniper_cam" type="image_stamper.py">
 	<param name="frame_rate_in" value="$(arg frame_rate)" />
