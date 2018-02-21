@@ -25,10 +25,10 @@ class StateImageWriter(object):
 
     def __init__(self):
         # setup state_image subscriber
-        self.image_sub = message_filters.Subscriber('image_raw/decompressed', Image)
+        self.image_sub = message_filters.Subscriber('/decompressed', Image)
         self.state_sub = message_filters.Subscriber('/state', State)
         
-        self.ts = message_filters.ApproximateTimeSynchronizer([self.image_sub, self.state_sub], 10, 0.1)
+        self.ts = message_filters.ApproximateTimeSynchronizer([self.image_sub, self.state_sub], 10, 1)
         self.ts.registerCallback(self.state_image_callback)
 
         # initialize state variables
