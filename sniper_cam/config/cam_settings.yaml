@@ -1,0 +1,107 @@
+basler_params:
+  - 
+    name: AcquisitionMode
+    type: enum
+    value: 'Continuous'
+  -
+    name: PixelFormat
+    type: enum
+    value: 'YCbCr422_8'
+  -
+    name: GainAuto
+    type: enum
+    value: 'Off'
+  -
+    name: Gain
+    type: float
+    value: 0.0
+  -
+    name: BlackLevel
+    type: float
+    value: 0.0
+  -
+    name: Gamma
+    type: float
+    value: 1.0
+  -
+    name: DemosaicingMode
+    type: enum
+    value: 'Simple'
+  -
+    name: LightSourcePreset
+    type: enum
+    value: 'Daylight5000K'
+  -
+    name: BalanceWhiteAuto
+    type: enum
+    value: 'Continuous'
+  -
+    name: BalanceRatioSelector
+    type: enum
+    value: 'Red'
+  -
+    name: BalanceRatio
+    type: float
+    value: 1.23755
+
+  # Use auto exposure, or choose the exposure time below
+  -
+    name: ExposureAuto
+    type: enum
+    value: 'Continuous'
+
+  # Inside
+  # -
+  #   name: ExposureTime
+  #   type: float
+  #   value: 7302.0
+
+  # Outside
+  # -
+  #   name: ExposureTime
+  #   type: float
+  #   value: 2000.0
+  -
+    name: TriggerSelector
+    type: enum
+    value: 'FrameStart'
+  -
+    name: TriggerMode
+    type: enum
+    value: 'Off'
+  -
+    name: AcquisitionFrameRateEnable
+    type: boolean
+    value: true
+  -
+    name: AcquisitionFrameRate
+    type: float
+    value: 5.0
+  -
+    name: AutoTargetBrightness
+    type: float
+    value: 0.30196
+  -
+    name: AutoFunctionProfile
+    type: enum
+    value: 'MinimizeGain'
+  -
+    name: AutoGainLowerLimit
+    type: float
+    value: 0.0
+  -
+    name: AutoGainUpperLimit
+    type: float
+    value: 12.00920
+  - 
+    name: AutoExposureTimeLowerLimit
+    type: float
+    value: 81.0
+  -
+    name: AutoExposureTimeUpperLimit
+    type: float
+    value: 1000000.0
+  -
+    name: AutoFunctionROISelector
+    type: enum
+    value: ROI1

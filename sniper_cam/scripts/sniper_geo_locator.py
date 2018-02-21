@@ -39,7 +39,7 @@ class SniperGeoLocator(object):
 
         # setup mouse click callback
         self.window = 'onboard image'
-        cv2.namedWindow(self.window)
+        cv2.namedWindow(self.window, flags=cv2.WINDOW_NORMAL) # Resizable window
         cv2.setMouseCallback(self.window, self.click_and_locate)
 
         # initialize home location (from gps_init)
@@ -60,18 +60,18 @@ class SniperGeoLocator(object):
         # initialize image parameters
         self.img_width = 0.0
         self.img_height = 0.0
-        self.fov_w = math.radians(47.2)   # field of view width with PointGrey Chameleon3 and 6mm lens from M12lenses.com
-        self.fov_h = math.radians(34.0)   # field of view height with PointGrey Chameleon3 and 6mm lens from M12lenses.com
+        self.fov_w = math.radians(54.2)   # angle of view width with Basler Ace and 12.5 mm lens
+        self.fov_h = math.radians(42.0)   # angle of view height with Basler Ace and 12.5mm lens
 
         # set the camera calibration parameters (hard-coded from calibration)
-        self.fx = 1622.655818
-        self.cx = 617.719411
-        self.fy = 1624.083744
-        self.cy = 407.261222
-        self.k1 = -0.596969
-        self.k2 = 0.339409
-        self.p1 = 0.000552
-        self.p2 = -0.000657
+        self.fx = 2637.281400
+        self.cx = 1303.562370
+        self.fy = 2638.652523
+        self.cy = 1061.192264
+        self.k1 = -0.070161
+        self.k2 = 0.061698
+        self.p1 = 0.002045
+        self.p2 = 0.001976
         self.k3 = 0.000000
 
         self.cameraMatrix = np.array([[self.fx, 0.0, self.cx],
@@ -88,7 +88,7 @@ class SniperGeoLocator(object):
         self.color = 0, 0, 255
 
         # initialize the image to save
-        shape = 964, 1288, 3
+        shape = 2048, 2592, 3
         self.image_save = np.zeros(shape, np.uint8)
 
         # set the all images directory
@@ -149,12 +149,12 @@ class SniperGeoLocator(object):
         self.update_file_list()
 
         # draw the interface on the display image
-        cv2.rectangle(image_display,(width-240,0),(width,35),(0,0,0),-1)
-        cv2.putText(image_display, "Status: ",(width-210,15),cv2.FONT_HERSHEY_PLAIN,1.25,(0,255,0))
-        cv2.putText(image_display, self.status,(width-130,15),cv2.FONT_HERSHEY_PLAIN,1.25,(self.color))
-        cv2.putText(image_display,"ID: " + self.image_id,(width-230,30),cv2.FONT_HERSHEY_PLAIN,1,(197,155,19))
-        cv2.rectangle(image_display,(0,0),(230,15),(0,0,0),-1)
-        cv2.putText(image_display, "Image number: " + str(self.image_number) + "/" + str(len(self.file_list)-1),(5,12),cv2.FONT_HERSHEY_PLAIN,1,(0,255,0))
+        cv2.rectangle(image_display,(width-680,0),(width,100),(0,0,0),-1)
+        cv2.putText(image_display, "Status: ",(width-500,33),cv2.FONT_HERSHEY_PLAIN,3,(0,255,0), thickness=2)
+        cv2.putText(image_display, self.status,(width-300,33),cv2.FONT_HERSHEY_PLAIN,3,(self.color), thickness=2)
+        cv2.putText(image_display,"ID: " + self.image_id,(width-675,80),cv2.FONT_HERSHEY_PLAIN,3,(197,155,19), thickness=2)
+        cv2.rectangle(image_display,(0,0),(550,45),(0,0,0),-1)
+        cv2.putText(image_display, "Image number: " + str(self.image_number) + "/" + str(len(self.file_list)-1),(5,33),cv2.FONT_HERSHEY_PLAIN,3,(0,255,0), thickness=2)
         cv2.line(image_display,((width/2)-10,height/2),((width/2)+10,height/2),self.color)
         cv2.line(image_display,(width/2,(height/2)+10),(width/2,(height/2)-10),self.color)
 
@@ -175,7 +175,7 @@ class SniperGeoLocator(object):
 
     def click_and_locate(self, event, x, y, flags, param):
         # if user clicks on target in the image frame
-        if event == cv2.EVENT_LBUTTONDOWN and self.target_number > 0  and self.image_number > 0:
+        if event == cv2.EVENT_LBUTTONDOWN and self.target_number > 0:
             #parse text file containing associated state data
             self.parse_state_file()
             self.chapter_13_geolocation(x,y)
@@ -213,8 +213,8 @@ class SniperGeoLocator(object):
         # geolocate the object (target) using technique from UAV book chapter 13
 
         # capture pixel coordinates
-        px = x_new;
-        py = y_new;
+        px = x_new
+        py = y_new
 
         # position of the UAV
         p_uav = np.array([[self.pn],[self.pe],[self.pd]])
