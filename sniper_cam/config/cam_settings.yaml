@@ -1,4 +1,8 @@
 basler_params:
+  - 
+    name: AcquisitionMode
+    type: enum
+    value: 'Continuous'
   -
     name: PixelFormat
     type: enum
@@ -39,6 +43,8 @@ basler_params:
     name: BalanceRatio
     type: float
     value: 1.23755
+
+  # Use auto exposure, or choose the exposure time below
   -
     name: ExposureAuto
     type: enum
@@ -56,9 +62,21 @@ basler_params:
   #   type: float
   #   value: 2000.0
   -
+    name: TriggerSelector
+    type: enum
+    value: 'FrameStart'
+  -
+    name: TriggerMode
+    type: enum
+    value: 'Off'
+  -
+    name: AcquisitionFrameRateEnable
+    type: boolean
+    value: true
+  -
     name: AcquisitionFrameRate
     type: float
-    value: 222.22222
+    value: 5.0
   -
     name: AutoTargetBrightness
     type: float
