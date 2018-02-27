@@ -74,10 +74,12 @@ class StateImageWriter(object):
 
         self.alpha_az = msg.azimuth
         self.alpha_el = msg.elevation
-
+        np_arr = np.fromstring(msg.image.data, np.uint8)
+        self.image_save = cv2.imdecode(np_arr, 1)
         # pull off the image portion of the message
         # image_display = self.bridge.imgmsg_to_cv2(msg.image, "bgr8")
-        self.image_save = self.bridge.imgmsg_to_cv2(msg.image, "bgr8")
+        #self.image_save = self.bridge.imgmsg_to_cv2(msg.image, "bgr8")
+		
 
         # increment the counter
         self.counter += 1
