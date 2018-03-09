@@ -1,0 +1,8 @@
+<launch>
+    <node name="live_stream" pkg="image_view" type="image_view" respawn="false" output="screen">
+        <remap from="image" to="/other_camera/image_raw"/>
+        <param name="image_transport" value="compressed" />
+    </node>
+
+    <node name="camera_calibration" pkg="rqt_reconfigure" type="rqt_reconfigure"/>
+</launch>

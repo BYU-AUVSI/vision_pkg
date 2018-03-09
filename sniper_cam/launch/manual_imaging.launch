@@ -13,6 +13,4 @@
  <node name="sort_and_locate_interface" pkg="sniper_cam" type="sniper_geo_locator.py" output="screen">
 	<param name="radius_earth" value="$(arg R_earth)" />
  </node>
-
-
 </launch>
