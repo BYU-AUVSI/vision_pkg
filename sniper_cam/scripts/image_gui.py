@@ -146,17 +146,16 @@ class Application(Frame):
                 self.toBeCropped = self.image
 
         if self.image:
-            #print(self.toBeCropped.size)
-            #print('{0} {1}'.format(offsetX, offsetY))
             if self.imageType == 'Standard':
                 self.croppedImage = self.toBeCropped.crop((int((self.start_x-offsetX)*self.w_mult), int((self.start_y-offsetY)*self.h_mult),
                                     int((self.curX-offsetX)*self.w_mult), int((self.curY-offsetY)*self.h_mult)))
             else:
                 self.croppedImage = self.toBeCropped.crop((self.start_x-offsetX, self.start_y-offsetY,self.curX-offsetX, self.curY-offsetY))
             self.finalImage = self.croppedImage
-            self.croppedImage = self.croppedImage.resize((1288,964), Im.BICUBIC)
-            #print('{0} {1} {2} {3}'.format(self.start_x, self.start_y, self.curX, self.curY))
+            self.croppedImage = self.croppedImage.resize((2592,2048), Im.BICUBIC)
+            self.croppedImage.thumbnail((self.master.winfo_screenwidth(), self.master.winfo_screenheight() - 200))
             self.image_tk = ImageTk.PhotoImage(self.croppedImage)
+            
             # create the label with the embedded image
             self.canvas.create_image(self.master.winfo_screenwidth()/2,(self.master.winfo_screenheight()-200)/2,anchor=CENTER, image=self.image_tk)
             self.imageType = 'Cropped'
@@ -290,17 +289,21 @@ class Application(Frame):
         self.canvas.bind("<B1-Motion>", self.on_move_press)
         self.canvas.bind("<ButtonRelease-1>", self.on_button_release)
         self.image = Im.open(filename)
-        self.originalImage = self.image
         self.finalImage = self.image
         width, height = self.image.size
-        self.w_mult = float(width) / 1288
-        self.h_mult = float(height) / 964
-        # resizes the image so that all are the same size
-        self.image = self.image.resize((1288, 964), Im.BICUBIC)
+        self.w_mult = float(width) / 2592
+        self.h_mult = float(height) / 2048
+
+        # resizes the image so that it fits the window
+        window_width=self.master.winfo_screenwidth()
+        window_height=self.master.winfo_screenheight()-200
+        self.image.thumbnail((window_width, window_height))
+        self.originalImage = self.image
+
         # converts the PIL image to a tk image
         self.image_tk = ImageTk.PhotoImage(self.image)
         # create the label with the embedded image
-        self.canvas.create_image(self.master.winfo_screenwidth()/2,(self.master.winfo_screenheight()-200)/2,anchor=CENTER, image=self.image_tk)
+        self.canvas.create_image(window_width/2, window_height/2,anchor=CENTER, image=self.image_tk)
         self.imageType = 'Standard'
         self.rotateJob = self.after(1000, self.sampleRotate)
         self.averagePositionVals()
@@ -387,7 +390,7 @@ class Application(Frame):
         self.row_size = int(height/self.rows)
         for i in range(len(self.images)):
             image = Im.open('{}/{}'.format(self.targetDir,self.images[i]))
-            image = image.resize((self.column_size, self.row_size))
+            image.thumbnail((self.column_size, self.row_size))
             # converts the PIL image to a tk image
             image_tk = ImageTk.PhotoImage(image)
             self.savedImages.append(image_tk)
