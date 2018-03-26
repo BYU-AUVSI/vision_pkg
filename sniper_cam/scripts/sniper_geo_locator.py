@@ -35,7 +35,7 @@ class SniperGeoLocator(object):
         self.gps_init_sub = rospy.Subscriber('/gps_init', Float32MultiArray, self.gps_init_cb)
 
         # get the earth's radius from current location
-        self.R_earth = rospy.get_param('~radius_earth', 6370027)    #default set to radius at Webster Field MD
+        self.R_earth = rospy.get_param('~radius_earth', 6370651)    # radius at Webster Field MD: 6370027, Utah: 6370651
 
         # setup mouse click callback
         self.window = 'onboard image'
@@ -43,7 +43,10 @@ class SniperGeoLocator(object):
         cv2.setMouseCallback(self.window, self.click_and_locate)
 
         # initialize home location (from gps_init)
-        self.home = [40.174500, -111.651665, 0.0] # lat, lon, alt (default BYU)
+        
+        # TODO: Use initialLat / initialLong / initialAlt from State topic if published?
+        # TODO: Can't use gps_init anymore.
+        self.home = [40.2483282, -111.650607, 1410.408] # lat, lon, alt (default BYU)
 
         # initialize state variables
         self.pn = 0.0
@@ -122,7 +125,8 @@ class SniperGeoLocator(object):
 
         # check to see if GPS Init data received
         if self.got_gps_init == False:
-            print "Warning! GPS_Init not received"
+            pass
+            #print "Warning! GPS_Init not received"
 
         # read in the image
         if len(self.file_list) == 0:
@@ -216,8 +220,15 @@ class SniperGeoLocator(object):
         px = x_new
         py = y_new
 
+        print("origx: %f, undisx: %f"% (x, px))
+        print("origy: %f, undisy: %f" % ( y, py))
+
+
         # position of the UAV
         p_uav = np.array([[self.pn],[self.pe],[self.pd]])
+
+        print("NED: %s" % p_uav)
+        print("phi: %f, theta: %f, psi: %f" % (self.phi, self.theta, self.psi))
 
         # convert to pixel locations measured from image center (0,0)
         eps_x = px - self.img_width/2.0
@@ -267,6 +278,7 @@ class SniperGeoLocator(object):
 
         print "Target " + str(self.target_number) + " image and location captured"
         print p_obj
+        print
         # print eps_x, eps_y
         # print "\n"
 
