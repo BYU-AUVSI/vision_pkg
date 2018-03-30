@@ -1,0 +1,4 @@
+<launch>
+    <node name="mission_controller" pkg="sniper_cam" type="mission_controller.py" output="screen"/>
+    <node name="interop_client" pkg="interop_pkg" type="client.py"/>
+</launch>
