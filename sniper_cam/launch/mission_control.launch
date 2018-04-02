@@ -1,4 +1,10 @@
 <launch>
     <node name="mission_controller" pkg="sniper_cam" type="mission_controller.py" output="screen"/>
     <node name="interop_client" pkg="interop_pkg" type="client.py"/>
+
+    <group ns="theseus">
+        <rosparam command="load" file="$(find theseus)/param/path_planning.yaml"  />
+        <node name="pathplanner" pkg="theseus" type="theseus_path_planner" output="screen"/>
+        <node name="rviz" pkg="rviz" type="rviz" args="-d $(find theseus)/viz/path_planner.rviz" required="true"/>
+    </group>    
 </launch>
