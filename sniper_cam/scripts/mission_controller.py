@@ -8,6 +8,7 @@ import roslib
 import signal
 import uav_msgs.msg
 import uav_msgs.srv
+from rosplane_msgs.msg import *
 
 PAUSE = "Pause"
 RESUME = "Resume"
@@ -57,7 +58,8 @@ class Application(Frame):
     def generateTapped(self):
         mission_name, mission_id = self.getDropdownData()
         interop_data = self.getMissionWithId(mission_id).mission # If mission id not valid, will return everything but waypoints
-
+        print(interop_data)
+        
         # First, check if we need to generate waypoints
         if mission_name == TARGET_SEARCH_MISSION_NAME:
             # Now generate a search path
@@ -91,7 +93,6 @@ class Application(Frame):
 
                     i += 1
 
-        self.setDataLabel(interop_data)
         self.generatePath(interop_data)
         self.setState(PATH_GENERATED_STATE)
             
@@ -138,6 +139,16 @@ class Application(Frame):
         self.pauseResumeButton.configure(text=self.pauseResumeState)
 
     def setupServices(self):
+        # TODO: For testing : make path planner happy. This should be commented out when running in the field
+        # pub = rospy.Publisher('state', State, queue_size=10)
+        # state = State()
+        # state.initial_lat = 38.143264
+        # state.initial_lon = -76.43075
+        # state.initial_alt = 6.7
+        # print(state)
+        # print(pub)
+        # pub.publish(state)
+
         print("Waiting for 'get_mission_with_id' service from interop client.py to become available")
         rospy.wait_for_service("get_mission_with_id")
         self.getMissionWithId = rospy.ServiceProxy("get_mission_with_id", uav_msgs.srv.GetMissionWithId)
