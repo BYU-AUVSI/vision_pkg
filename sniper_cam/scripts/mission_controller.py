@@ -9,6 +9,8 @@ import signal
 import uav_msgs.msg
 import uav_msgs.srv
 from rosplane_msgs.msg import *
+
+# Use for lawnmower path geometry
 import shapely.geometry
 import pyproj
 
@@ -67,6 +69,8 @@ class Application(Frame):
             points = self.generateLawnmowerPath(interop_data)
             new_waypoints = []
             i = 1
+
+            # Transform shapely points into JudgeMission OrderedPoints
             for point in points:
                 op = uav_msgs.msg.OrderedPoint()
                 op.ordinal = i
@@ -81,6 +85,8 @@ class Application(Frame):
 
                 i += 1
             
+            # Replace waypoints from judges (which in this case are actually the search area points) with the generated
+            # lawnmower path points.
             interop_data.waypoints = new_waypoints
 
         elif mission_name in INTEROP_SOURCE:
@@ -112,7 +118,7 @@ class Application(Frame):
                     i += 1
 
         self.setDataLabel(interop_data)
-        result = self.generatePath(interop_data)
+        self.generatePath(interop_data)
         self.setState(PATH_GENERATED_STATE)
             
     def sendTapped(self):
@@ -217,11 +223,11 @@ class Application(Frame):
         self.dataLabel = ScrolledText(root, width=50, height=20)
         self.dataLabel.grid(padx = 10, pady=10)
 
-    # TODO: Clean up this code (remove duplication)
     def generateLawnmowerPath(self, mission):
-        # Set up projections
-        p_ll = pyproj.Proj(init='epsg:4326')
-        p_mt = pyproj.Proj(init='epsg:3857') # metric; same as EPSG:900913
+        # Set up projections. We project from GPS into a flat plane to allow us to specify 
+        # point spacing accurately. These newly generate points then are projected back to GPS.
+        p_gps = pyproj.Proj(init='epsg:4326')
+        p_flat = pyproj.Proj(init='epsg:3857') # metric; same as EPSG:900913
 
         # Perimeter of points
         boundaries = mission.waypoints
@@ -244,21 +250,21 @@ class Application(Frame):
                 min_lat = p[1]
 
         # Upper left and lower right corner of bounding box
-        nw = shapely.geometry.Point((min_lon, max_lat))
-        se = shapely.geometry.Point((max_lon, min_lat))
+        upper_left = shapely.geometry.Point((min_lon, max_lat))
+        lower_right = shapely.geometry.Point((max_lon, min_lat))
 
         front_to_back_step_size = 100 # 1000 = 1 km grid step size
         side_to_side_step_size = 100
 
         # Project corners to target projection
-        s = pyproj.transform(p_ll, p_mt, nw.x, nw.y) # Transform NW point to 3857
-        e = pyproj.transform(p_ll, p_mt, se.x, se.y) # .. same for SE
+        s = pyproj.transform(p_gps, p_flat, upper_left.x, upper_left.y) # Transform NW point to 3857
+        e = pyproj.transform(p_gps, p_flat, lower_right.x, lower_right.y) # .. same for SE
 
-        # Determine long flight direction
+        # Determine long flight direction. We want to fly across the longest axis to minimize turns.
         horiz = abs(s[0] - e[0])
         vert = abs(s[1] - e[1])
+
         if vert > horiz:
-            # Iterate over 2D area
             forwards = True
             gridpoints = []
             x = s[0]
@@ -266,13 +272,13 @@ class Application(Frame):
                 if forwards:
                     y = s[1]
                     while y > e[1]:
-                        p = shapely.geometry.Point(pyproj.transform(p_mt, p_ll, x, y))
+                        p = shapely.geometry.Point(pyproj.transform(p_flat, p_gps, x, y))
                         gridpoints.append(p)
                         y -= front_to_back_step_size
                 else:
                     y = e[1]
                     while y < s[1]:
-                        p = shapely.geometry.Point(pyproj.transform(p_mt, p_ll, x, y))
+                        p = shapely.geometry.Point(pyproj.transform(p_flat, p_gps, x, y))
                         gridpoints.append(p)
                         y += front_to_back_step_size
 
@@ -280,7 +286,6 @@ class Application(Frame):
                 x += side_to_side_step_size
 
         else:
-            # Iterate over 2D area
             forwards = True
             gridpoints = []
             y = s[1]
@@ -288,19 +293,20 @@ class Application(Frame):
                 if forwards:
                     x = s[0]
                     while x < e[0]:
-                        p = shapely.geometry.Point(pyproj.transform(p_mt, p_ll, x, y))
+                        p = shapely.geometry.Point(pyproj.transform(p_flat, p_gps, x, y))
                         gridpoints.append(p)
                         x += front_to_back_step_size
                 else:
                     x = e[0]
                     while x > s[0]:
-                        p = shapely.geometry.Point(pyproj.transform(p_mt, p_ll, x, y))
+                        p = shapely.geometry.Point(pyproj.transform(p_flat, p_gps, x, y))
                         gridpoints.append(p)
                         x -= front_to_back_step_size
 
                 forwards = not forwards
                 y -= side_to_side_step_size
 
+        # Trim all points that don't lie within the polygon (boundaries of search area)
         inside = [p for p in gridpoints if p.within(polygon)]
         return inside
 
