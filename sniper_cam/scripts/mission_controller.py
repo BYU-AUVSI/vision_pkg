@@ -265,7 +265,7 @@ class Application(Frame):
         vert = abs(s[1] - e[1])
 
         if vert > horiz:
-            forwards = True
+            forwards = True # Used to determine wrap around on the end of flying a line. 
             gridpoints = []
             x = s[0]
             while x < e[0]:
