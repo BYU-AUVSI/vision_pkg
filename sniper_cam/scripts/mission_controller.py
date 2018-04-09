@@ -89,13 +89,17 @@ class Application(Frame):
             # lawnmower path points.
             interop_data.waypoints = new_waypoints
 
+        elif mission_name == BOTTLE_DROP_MISSION_NAME:
+            # For now, generate one point on either side of the drop point.
+            pass
+
         elif mission_name in INTEROP_SOURCE:
             # Send to mission_planner immediately
             pass
 
         else:
             # Read points from file
-            filename = askopenfilename(title="Select file of waypoints") # show an "Open" dialog box and return the path to the selected file
+            filename = askopenfilename(title="Select file with waypoints") # show an "Open" dialog box and return the path to the selected file
             if not filename:
                 return
 
@@ -234,27 +238,14 @@ class Application(Frame):
         perimeter = [(p.point.longitude, p.point.latitude) for p in boundaries]
 
         polygon = shapely.geometry.Polygon(perimeter)
-
-        max_lat = perimeter[0][1]
-        max_lon = perimeter[0][0]
-        min_lat = perimeter[0][1]
-        min_lon = perimeter[0][0]
-        for p in perimeter:
-            if p[0] > max_lon:
-                max_lon = p[0]
-            if p[0] < min_lon:
-                min_lon = p[0]
-            if p[1] > max_lat:
-                max_lat = p[1]
-            if p[1] < min_lat:
-                min_lat = p[1]
+        bounds = polygon.bounds # Bounding box
 
         # Upper left and lower right corner of bounding box
-        upper_left = shapely.geometry.Point((min_lon, max_lat))
-        lower_right = shapely.geometry.Point((max_lon, min_lat))
+        upper_left = shapely.geometry.Point((bounds[0], bounds[3]))
+        lower_right = shapely.geometry.Point((bounds[2], bounds[1]))
 
         front_to_back_step_size = 100 # 1000 = 1 km grid step size
-        side_to_side_step_size = 100
+        side_to_side_step_size = 120
 
         # Project corners to target projection
         s = pyproj.transform(p_gps, p_flat, upper_left.x, upper_left.y) # Transform NW point to 3857
