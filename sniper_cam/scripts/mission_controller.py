@@ -91,7 +91,9 @@ class Application(Frame):
 
         elif mission_name == BOTTLE_DROP_MISSION_NAME:
             # For now, generate one point on either side of the drop point.
-            pass
+            points = self.generateBottleDropPoints(interop_data)
+            interop_data.waypoints = points
+
 
         elif mission_name in INTEROP_SOURCE:
             # Send to mission_planner immediately
@@ -226,6 +228,40 @@ class Application(Frame):
 
         self.dataLabel = ScrolledText(root, width=50, height=20)
         self.dataLabel.grid(padx = 10, pady=10)
+
+    def generateBottleDropPoints(self, mission):
+        p_gps = pyproj.Proj(init='epsg:4326')
+        p_flat = pyproj.Proj(init='epsg:3857') # metric; same as EPSG:900913
+
+        # Perimeter of points
+        waypoint = mission.waypoints[0]
+        proj = pyproj.transform(p_gps, p_flat, waypoint.point.longitude, waypoint.point.latitude)
+
+        middle = shapely.geometry.Point(pyproj.transform(p_flat, p_gps, proj[0], proj[1]))
+        first = shapely.geometry.Point(pyproj.transform(p_flat, p_gps, proj[0] - 120, proj[1]))
+        last = shapely.geometry.Point(pyproj.transform(p_flat, p_gps, proj[0] + 120, proj[1]))
+
+        points = [first, middle, last]
+        new_waypoints = []
+        i = 1
+
+        # Transform shapely points into JudgeMission OrderedPoints
+        print(points)
+        for point in points:
+            op = uav_msgs.msg.OrderedPoint()
+            op.ordinal = i
+
+            p = uav_msgs.msg.Point()
+            p.latitude = point.y
+            p.longitude = point.x
+            p.altitude = 40
+            op.point = p
+
+            new_waypoints.append(op)
+
+            i += 1
+
+        return new_waypoints
 
     def generateLawnmowerPath(self, mission):
         # Set up projections. We project from GPS into a flat plane to allow us to specify 
