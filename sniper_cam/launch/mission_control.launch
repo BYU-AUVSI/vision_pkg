@@ -6,9 +6,9 @@
         <rosparam command="load" file="$(find theseus)/param/path_planning.yaml"  />
         <!-- ROS Parameters below this line are not needed for the launch file, UNLESS you are testing WITHOUT the plane publishing to state -->
         <param name="testing/init_references" value="true"/>
-        <param name="testing/lat_ref" value="38.14326388888889"/>
-        <param name="testing/lon_ref" value="-76.43075"/>
-        <param name="testing/h_ref" value="6.701"/>
+        <param name="testing/lat_ref" value="39.9694"/>
+        <param name="testing/lon_ref" value="-111.967"/>
+        <param name="testing/h_ref" value="1430.859979"/>
         <param name="testing/N_init" value="0.0"/>
         <param name="testing/E_init" value="0.0"/>
         <param name="testing/D_init" value="0.0"/>

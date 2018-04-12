@@ -14,6 +14,12 @@ from rosplane_msgs.msg import *
 import shapely.geometry
 import pyproj
 
+BOTTLE_DROP_HEIGHT_ABOVE_GROUND = 40
+SEARCH_AREA_HEIGHT_ABOVE_GROUND = 40
+
+front_to_back_step_size = 100 # 1000 = 1 km grid step size
+side_to_side_step_size = 120
+
 PAUSE = "Pause"
 RESUME = "Resume"
 
@@ -62,11 +68,13 @@ class Application(Frame):
     def generateTapped(self):
         mission_name, mission_id = self.getDropdownData()
         interop_data = self.getMissionWithId(mission_id).mission # If mission id not valid, will return everything but waypoints
+        print(interop_data)
 
         # First, check if we need to generate waypoints
         if mission_name == TARGET_SEARCH_MISSION_NAME:
             # Now generate a search path
             points = self.generateLawnmowerPath(interop_data)
+            min_altitude = interop_data.waypoints[0].point.altitude # Assume altitude of search area boundaries is the ground
             new_waypoints = []
             i = 1
 
@@ -78,7 +86,7 @@ class Application(Frame):
                 p = uav_msgs.msg.Point()
                 p.latitude = point.y
                 p.longitude = point.x
-                p.altitude = 40
+                p.altitude = min_altitude + SEARCH_AREA_HEIGHT_ABOVE_GROUND
                 op.point = p
 
                 new_waypoints.append(op)
@@ -90,8 +98,11 @@ class Application(Frame):
             interop_data.waypoints = new_waypoints
 
         elif mission_name == BOTTLE_DROP_MISSION_NAME:
+            min_altitude = interop_data.waypoints[0].point.altitude # In interop client, we set altitude of waypoint to be the ground
+            print("Min altitude: " + str(min_altitude))
+
             # For now, generate one point on either side of the drop point.
-            points = self.generateBottleDropPoints(interop_data)
+            points = self.generateBottleDropPoints(interop_data, min_altitude)
             interop_data.waypoints = points
 
 
@@ -229,7 +240,7 @@ class Application(Frame):
         self.dataLabel = ScrolledText(root, width=50, height=20)
         self.dataLabel.grid(padx = 10, pady=10)
 
-    def generateBottleDropPoints(self, mission):
+    def generateBottleDropPoints(self, mission, min_altitude):
         p_gps = pyproj.Proj(init='epsg:4326')
         p_flat = pyproj.Proj(init='epsg:3857') # metric; same as EPSG:900913
 
@@ -246,7 +257,6 @@ class Application(Frame):
         i = 1
 
         # Transform shapely points into JudgeMission OrderedPoints
-        print(points)
         for point in points:
             op = uav_msgs.msg.OrderedPoint()
             op.ordinal = i
@@ -254,7 +264,7 @@ class Application(Frame):
             p = uav_msgs.msg.Point()
             p.latitude = point.y
             p.longitude = point.x
-            p.altitude = 40
+            p.altitude = min_altitude + BOTTLE_DROP_HEIGHT_ABOVE_GROUND
             op.point = p
 
             new_waypoints.append(op)
@@ -280,8 +290,7 @@ class Application(Frame):
         upper_left = shapely.geometry.Point((bounds[0], bounds[3]))
         lower_right = shapely.geometry.Point((bounds[2], bounds[1]))
 
-        front_to_back_step_size = 100 # 1000 = 1 km grid step size
-        side_to_side_step_size = 120
+        
 
         # Project corners to target projection
         s = pyproj.transform(p_gps, p_flat, upper_left.x, upper_left.y) # Transform NW point to 3857
