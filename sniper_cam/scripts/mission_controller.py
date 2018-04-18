@@ -15,10 +15,10 @@ import shapely.geometry
 import pyproj
 
 BOTTLE_DROP_HEIGHT_ABOVE_GROUND = 40
-SEARCH_AREA_HEIGHT_ABOVE_GROUND = 40
+SEARCH_AREA_HEIGHT_ABOVE_GROUND = 100
 
 front_to_back_step_size = 100 # 1000 = 1 km grid step size
-side_to_side_step_size = 120
+side_to_side_step_size = 200
 
 PAUSE = "Pause"
 RESUME = "Resume"
