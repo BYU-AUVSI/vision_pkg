@@ -35,7 +35,7 @@ class SniperGeoLocator(object):
         self.gps_init_sub = rospy.Subscriber('/gps_init', Float32MultiArray, self.gps_init_cb)
 
         # get the earth's radius from current location
-        self.R_earth = rospy.get_param('~radius_earth', 6370651)    # radius at Webster Field MD: 6370027, Utah: 6370651
+        self.R_earth = rospy.get_param('~radius_earth', 6370027)    # radius at Webster Field MD: 6370027, Utah: 6370651
 
         # setup mouse click callback
         self.window = 'onboard image'
@@ -46,7 +46,7 @@ class SniperGeoLocator(object):
         
         # TODO: Use initialLat / initialLong / initialAlt from State topic if published?
         # TODO: Can't use gps_init anymore.
-        self.home = [40.2483282, -111.650607, 1410.408] # lat, lon, alt (default BYU)
+        self.home = [38.144692, -76.428007]
 
         # initialize state variables
         self.pn = 0.0

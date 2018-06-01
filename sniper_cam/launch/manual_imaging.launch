@@ -3,7 +3,7 @@
  <!-- Input Earth's Radius (in meters) at current location -->
  <!-- Springville UT: 6370651 -->
  <!-- Webster Field MD: 6370027 -->
- <arg name="R_earth" value="6370651" />
+ <arg name="R_earth" value="6370027" />
 
  <node name="state_image_writer" pkg="sniper_cam" type="state_image_writer.py">
 	<param name="image_directory" value="~/Desktop/vision_files/all_images/" />
