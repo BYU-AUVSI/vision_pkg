@@ -251,13 +251,12 @@ class Application(Frame):
         self.targetButton = Button(self, width=18, height=1, text="BROWSE", command=self.browseDirectory)
         self.targetButton.grid(row=2, column=3)
 
-        Label(self, text=" ").grid(row=5, column=1)
         self.descriptionLabel = Label(self, text="Emergent Description:")
-        self.descriptionLabel.grid(row=6, column=1)
+        self.descriptionLabel.grid(row=4, column=4, columnspan=2)
 
         self.descriptionContent = StringVar()
         self.descriptionField = Entry(self, textvariable=self.descriptionContent, state=DISABLED)
-        self.descriptionField.grid(row=6, column=2)
+        self.descriptionField.grid(row=5, column=4, columnspan=2)
 
 
     def loadImage(self, event):
