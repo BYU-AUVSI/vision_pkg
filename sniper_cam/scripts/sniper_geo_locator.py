@@ -12,7 +12,7 @@
 ## -middle click decrements target number
 
 import rospy
-from sensor_msgs.msg import CompressedImage
+from sensor_msgs.msg import Image
 from sniper_cam.msg import stateImage
 from std_msgs.msg import Float64, Float32MultiArray
 from cv_bridge import CvBridge, CvBridgeError
