@@ -167,12 +167,24 @@ class SniperGeoLocator(object):
         key = cv2.waitKey(500)
         #print key
 
-        if key == 32 and len(self.file_list) > self.image_number + 1:   # spacebar
+        if key == 83 and len(self.file_list) > self.image_number + 1:   # right key
             self.image_number += 1
-        elif key == 98 and self.image_number > 0: # 'B' key for 'back'
+        elif key == 81 and self.image_number > 0: # 'left' key for 'back'
             self.image_number -= 1
-        elif key == 32 and len(self.file_list) == self.image_number + 1:
+        elif key == 83 and len(self.file_list) == self.image_number + 1:
             print "End of file list reached"
+        elif key == ord('d'):
+            self.target_number += 1
+            self.status = "Target " + str(self.target_number)
+            self.color = 0, 255, 0
+        elif key == ord('a') and self.target_number > 0:
+            if self.target_number == 1:
+                self.target_number = 0
+                self.status = "Standby..."
+                self.color = 0, 0, 255
+            else:
+                self.target_number -= 1
+                self.status = "Target " + str(self.target_number)
         else:
             pass
 
@@ -185,11 +197,13 @@ class SniperGeoLocator(object):
             self.chapter_13_geolocation(x,y)
 
         elif event == cv2.EVENT_RBUTTONDOWN:
-            self.target_number += 1
-            self.status = "Target " + str(self.target_number)
-            self.color = 0, 255, 0
+            #self.target_number += 1
+            #self.status = "Target " + str(self.target_number)
+            #self.color = 0, 255, 0
+            pass
 
         elif event == cv2.EVENT_MBUTTONDOWN and self.target_number > 0:
+            '''
             if self.target_number == 1:
                 self.target_number = 0
                 self.status = "Standby..."
@@ -197,6 +211,8 @@ class SniperGeoLocator(object):
             else:
                 self.target_number -= 1
                 self.status = "Target " + str(self.target_number)
+            '''
+            pass    
         else:
             pass
 
