@@ -1,4 +1,6 @@
-# vision_pkg
+# [DEPRECATED] vision_pkg
+
+please use the [imaging pkg](https://github.com/BYU-AUVSI/imaging)
 
 ## Image detection
 ### Plane side
